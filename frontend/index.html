@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost & Found - Find Your Lost Items</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-search-location"></i>
+                <span>Lost & Found</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#browse" class="nav-link">Browse Items</a></li>
+                <li><a href="#report" class="nav-link">Report Item</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+            </ul>
+            <div class="nav-auth">
+                <button id="loginBtn" class="btn btn-outline">Login</button>
+                <button id="signupBtn" class="btn btn-primary">Sign Up</button>
+                <div id="userMenu" class="user-menu" style="display: none;">
+                    <span id="userName"></span>
+                    <button id="logoutBtn" class="btn btn-outline">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Lost Something? Found Something?</h1>
+            <p>Connect with your community to reunite lost items with their owners</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary btn-large" onclick="scrollToSection('report')">
+                    <i class="fas fa-plus"></i> Report an Item
+                </button>
+                <button class="btn btn-outline btn-large" onclick="scrollToSection('browse')">
+                    <i class="fas fa-search"></i> Browse Items
+                </button>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="stat">
+                <span class="stat-number" id="totalItems">0</span>
+                <span class="stat-label">Items Reported</span>
+            </div>
+            <!-- <div class="stat">
+                <span class="stat-number" id="foundItems">0</span>
+                <span class="stat-label">Items Reunited</span>
+            </div> -->
+        </div>
+    </section>
+
+    <!-- Browse Items Section -->
+    <section id="browse" class="browse-section">
+        <div class="container">
+            <h2>Browse Lost & Found Items</h2>
+            
+            <!-- Filters -->
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="statusFilter">Status:</label>
+                    <select id="statusFilter">
+                        <option value="">All</option>
+                        <option value="lost">Lost</option>
+                        <option value="found">Found</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="categoryFilter">Category:</label>
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Jewelry">Jewelry</option>
+                        <option value="Books">Books</option>
+                        <option value="Keys">Keys</option>
+                        <option value="Bags">Bags</option>
+                        <option value="Documents">Documents</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="searchFilter">Search:</label>
+                    <input type="text" id="searchFilter" placeholder="Search items...">
+                </div>
+                <button id="clearFilters" class="btn btn-outline">Clear Filters</button>
+            </div>
+
+            <!-- Items Grid -->
+            <div id="itemsGrid" class="items-grid">
+                <!-- Items will be loaded here -->
+            </div>
+
+            <!-- Loading -->
+            <div id="loading" class="loading" style="display: none;">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>Loading items...</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Report Item Section -->
+    <section id="report" class="report-section">
+        <div class="container">
+            <h2>Report a Lost or Found Item</h2>
+            <div class="report-form-container">
+                <form id="reportForm" class="report-form" enctype="multipart/form-data">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="itemTitle">Item Title *</label>
+                            <input type="text" id="itemTitle" name="title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemStatus">Status *</label>
+                            <select id="itemStatus" name="status" required>
+                                <option value="lost">Lost</option>
+                                <option value="found">Found</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="itemCategory">Category *</label>
+                            <select id="itemCategory" name="category" required>
+                                <option value="">Select Category</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Clothing">Clothing</option>
+                                <option value="Jewelry">Jewelry</option>
+                                <option value="Books">Books</option>
+                                <option value="Keys">Keys</option>
+                                <option value="Bags">Bags</option>
+                                <option value="Documents">Documents</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemLocation">Location *</label>
+                            <input type="text" id="itemLocation" name="location" placeholder="Where was it lost/found?" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="itemDescription">Description *</label>
+                        <textarea id="itemDescription" name="description" rows="4" placeholder="Provide detailed description..." required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactName">Your Name *</label>
+                            <input type="text" id="contactName" name="contactInfo.name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">Email *</label>
+                            <input type="email" id="contactEmail" name="contactInfo.email" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactPhone">Phone (Optional)</label>
+                            <input type="tel" id="contactPhone" name="contactInfo.phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="itemImage">Upload Image</label>
+                            <input type="file" id="itemImage" name="image" accept="image/*">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="fas fa-paper-plane"></i>
+                        Submit Report
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>Report</h3>
+                    <p>Lost something? Found something? Report it with detailed description and photos.</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Search</h3>
+                    <p>Browse through reported items using our smart search and filtering system.</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>Connect</h3>
+                    <p>Found a match? Connect with the reporter/department Instructor to collect it back.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-search-location"></i>
+                        <span>Lost & Found</span>
+                    </div>
+                    <p>Helping BIET communities reunite lost items with their owners.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#browse">Browse Items</a></li>
+                        <li><a href="#report">Report Item</a></li>
+                        <li><a href="#about">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-envelope"></i> **chethanbiet2024@gmail.com**</p>
+                    <p><i class="fas fa-phone"></i> **+91-8151919619**</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Lost & Found. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Item Detail Modal -->
+    <div id="itemModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="itemDetails">
+                <!-- Item details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modals -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Login</h3>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Sign Up</h3>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupName">Name</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
